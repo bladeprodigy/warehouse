@@ -1,4 +1,4 @@
-name: Build and deploy ASP.NET Core 9 app to Azure Web App - warehouse-backend
+name: Build and Deploy .NET 9 API to Azure Web App
 
 on:
   push:
@@ -10,13 +10,12 @@ jobs:
   build:
     runs-on: windows-latest
     permissions:
-      contents: read    # for actions/checkout
+      contents: read
 
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
+      - uses: actions/checkout@v4
 
-      - name: Setup .NET 9 SDK
+      - name: Set up .NET 9 SDK
         uses: actions/setup-dotnet@v4
         with:
           dotnet-version: '9.x'
@@ -28,10 +27,7 @@ jobs:
         run: dotnet build WarehouseApi/WarehouseApi.csproj --configuration Release --no-restore
 
       - name: Publish
-        run: dotnet publish WarehouseApi/WarehouseApi.csproj \
-              --configuration Release \
-              --output ./publish \
-              --no-build
+        run: dotnet publish WarehouseApi/WarehouseApi.csproj --configuration Release --output ./publish --no-build
 
       - name: Upload artifact
         uses: actions/upload-artifact@v4
@@ -43,7 +39,7 @@ jobs:
     runs-on: windows-latest
     needs: build
     permissions:
-      id-token: write   # for azure/login OIDC auth
+      id-token: write    # needed for OIDC
       contents: read
 
     steps:
@@ -52,16 +48,16 @@ jobs:
         with:
           name: dotnet-app
 
-      - name: Azure Login via OIDC
+      - name: Login to Azure
         uses: azure/login@v2
         with:
-          # if you prefer service principal auth, swap to client-id + client-secret
-          oidc: true
-          subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
-          tenant-id:       ${{ secrets.AZURE_TENANT_ID }}
+          client-id: ${{ secrets.AZUREAPPSERVICE_CLIENTID_2DE581432D804BE785281C1F75C58370 }}
+          tenant-id: ${{ secrets.AZUREAPPSERVICE_TENANTID_698B884D72DB49E589DF0FC27476CDA2 }}
+          subscription-id: ${{ secrets.AZUREAPPSERVICE_SUBSCRIPTIONID_AC3AE8B9282140D6B7DD18D9E60D25E5 }}
 
       - name: Deploy to Azure Web App
         uses: azure/webapps-deploy@v3
         with:
-          app-name: 'warehouse-backend'
-          package: './publish'
+          app-name:     'warehouse-backend'
+          slot-name:    'Production'   # optional, can be omitted
+          package:      '.'
