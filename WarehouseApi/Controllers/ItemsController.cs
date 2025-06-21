@@ -11,24 +11,31 @@ namespace WarehouseApi.Controllers;
 public class ItemsController(IItemService svc) : ControllerBase
 {
     [HttpGet]
-    public Task<List<ItemDtos.ItemDto>> GetAll() => svc.GetAllAsync();
+    public Task<List<ItemDto>> GetAll(
+        [FromQuery] string? searchName,
+        [FromQuery] string? searchSku,
+        [FromQuery] int pageNumber = 1,
+        [FromQuery] int pageSize = 10)
+    {
+        return svc.GetAllAsync(searchName, searchSku, pageNumber, pageSize);
+    }
 
     [HttpGet("{id:int}")]
-    public async Task<ActionResult<ItemDtos.ItemDto>> Get(int id)
+    public async Task<ActionResult<ItemDto>> Get(int id)
     {
         var item = await svc.GetByIdAsync(id);
         return item == null ? NotFound() : Ok(item);
     }
 
     [HttpPost]
-    public async Task<ActionResult<ItemDtos.ItemDto>> Create([FromBody] ItemDtos.CreateItemDto dto)
+    public async Task<ActionResult<ItemDto>> Create([FromBody] CreateItemDto dto)
     {
         var created = await svc.CreateAsync(dto);
         return CreatedAtAction(nameof(Get), new { id = created.Id }, created);
     }
 
     [HttpPut("{id:int}")]
-    public async Task<IActionResult> Update(int id, [FromBody] ItemDtos.UpdateItemDto dto)
+    public async Task<IActionResult> Update(int id, [FromBody] CreateItemDto dto)
     {
         return await svc.UpdateAsync(id, dto)
             ? NoContent()

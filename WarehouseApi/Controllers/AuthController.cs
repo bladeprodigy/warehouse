@@ -13,8 +13,8 @@ public class AuthController(IAuthService authService) : ControllerBase
     {
         var token = await authService.AuthenticateAsync(req.Username, req.Password);
         if (token == null)
-            return Unauthorized(new LoginResponse { Message = "Invalid credentials" });
+            return Unauthorized(new LoginResponse(" ", "Invalid credentials"));
 
-        return Ok(new LoginResponse { Token = token, Message = "Login successful" });
+        return Ok(new LoginResponse(token, "Login successful"));
     }
 }

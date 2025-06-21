@@ -4,9 +4,14 @@ namespace WarehouseApi.Interfaces;
 
 public interface IItemService
 {
-    Task<List<ItemDtos.ItemDto>> GetAllAsync();
-    Task<ItemDtos.ItemDto?> GetByIdAsync(int id);
-    Task<ItemDtos.ItemDto> CreateAsync(ItemDtos.CreateItemDto dto);
-    Task<bool> UpdateAsync(int id, ItemDtos.UpdateItemDto dto);
+    Task<List<ItemDto>> GetAllAsync(
+        string? searchName = null,
+        string? searchSku = null,
+        int pageNumber = 1,
+        int pageSize = 10);
+
+    Task<ItemDto?> GetByIdAsync(int id);
+    Task<ItemDto> CreateAsync(CreateItemDto dto);
+    Task<bool> UpdateAsync(int id, CreateItemDto dto);
     Task<bool> DeleteAsync(int id);
 }

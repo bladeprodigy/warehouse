@@ -6,28 +6,14 @@ using WarehouseShared;
 namespace WarehouseApi.Controllers;
 
 [ApiController]
-[Route("api/items/{itemId:int}/movements")]
+[Route("api/movements")]
 [Authorize]
 public class StockMovementsController(IStockMovementService svc) : ControllerBase
 {
-    [HttpPost]
-    public async Task<ActionResult<StockMovementDtos.StockMovementDto>> Post(
-        int itemId,
-        [FromBody] StockMovementDtos.CreateMovementDto dto)
+    [HttpGet]
+    public async Task<ActionResult<List<StockMovementDto>>> GetAll()
     {
-        var result = await svc.AdjustStockAsync(itemId, dto);
-        return CreatedAtAction(
-            nameof(GetById),
-            new { itemId, movementId = result.Id },
-            result
-        );
-    }
-
-    [HttpGet("{movementId}")]
-    public async Task<ActionResult<StockMovementDtos.StockMovementDto>> GetById(
-        int itemId, int movementId)
-    {
-        // (Implement retrieval if you need it; otherwise return NoContent)
-        return NoContent();
+        var list = await svc.GetAllAsync();
+        return Ok(list);
     }
 }

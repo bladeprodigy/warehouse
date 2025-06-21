@@ -11,7 +11,7 @@ namespace WarehouseApi.Controllers;
 public class LocationsController(ILocationService service) : ControllerBase
 {
     [HttpGet]
-    public async Task<ActionResult<List<LocationDtos.LocationDto>>> GetAll()
+    public async Task<ActionResult<List<LocationDto>>> GetAll()
     {
         var locations = await service.GetAllAsync();
         return Ok(locations);

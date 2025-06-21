@@ -4,6 +4,10 @@ namespace WarehouseApi.Interfaces;
 
 public interface IStockMovementService
 {
-    Task<StockMovementDtos.StockMovementDto> AdjustStockAsync(int itemId,
-        StockMovementDtos.CreateMovementDto dto);
+    Task<List<StockMovementDto>> GetAllAsync();
+    Task<List<StockMovementDto>> GetForItemAsync(int itemId);
+    Task<StockMovementDto?> GetByIdAsync(int itemId, int movementId);
+
+    Task<StockMovementDto> AdjustStockAsync(int itemId,
+        CreateMovementDto dto);
 }

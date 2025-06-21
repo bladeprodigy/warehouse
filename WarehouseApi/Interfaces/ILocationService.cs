@@ -4,5 +4,5 @@ namespace WarehouseApi.Interfaces;
 
 public interface ILocationService
 {
-    Task<List<LocationDtos.LocationDto>> GetAllAsync();
+    Task<List<LocationDto>> GetAllAsync();
 }
