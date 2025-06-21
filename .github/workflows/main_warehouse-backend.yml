@@ -28,10 +28,7 @@ jobs:
         run: dotnet build WarehouseApi/WarehouseApi.csproj --configuration Release --no-restore
 
       - name: Publish
-        run: dotnet publish WarehouseApi/WarehouseApi.csproj \
-              --configuration Release \
-              --output ./publish \
-              --no-build
+        run: dotnet publish WarehouseApi/WarehouseApi.csproj --configuration Release --output ./publish --no-build
 
       - name: Upload artifact
         uses: actions/upload-artifact@v4
