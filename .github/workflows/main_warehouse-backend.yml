@@ -60,4 +60,4 @@ jobs:
         with:
           app-name:     'warehouse-backend'
           slot-name:    'Production'   # optional, can be omitted
-          package:      './publish'
+          package:      '.'
