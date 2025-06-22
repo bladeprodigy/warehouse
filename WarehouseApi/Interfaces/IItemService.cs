@@ -5,8 +5,7 @@ namespace WarehouseApi.Interfaces;
 public interface IItemService
 {
     Task<List<ItemDto>> GetAllAsync(
-        string? searchName = null,
-        string? searchSku = null,
+        string? search = null,
         int pageNumber = 1,
         int pageSize = 10);
 

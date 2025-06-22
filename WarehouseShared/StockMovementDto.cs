@@ -2,8 +2,9 @@
 
 public record StockMovementDto(
     int Id,
-    int ItemId,
-    int Change,
+    ItemDto Item,
+    int ValueBefore,
+    int ValueAfter,
     string Reason,
     DateTime MovedAt
 );

@@ -14,11 +14,19 @@ public class ItemStockMovementsController(IStockMovementService svc) : Controlle
     public async Task<IActionResult> Post(int itemId,
         [FromBody] CreateMovementDto dto)
     {
-        var result = await svc.AdjustStockAsync(itemId, dto);
-        return CreatedAtAction(
-            nameof(GetById),
-            new { itemId, movementId = result.Id },
-            result);
+        try
+        {
+            var movement = await svc.AdjustStockAsync(itemId, dto);
+            return Ok(movement);
+        }
+        catch (KeyNotFoundException)
+        {
+            return NotFound();
+        }
+        catch (InvalidOperationException ex)
+        {
+            return BadRequest(new { error = ex.Message });
+        }
     }
 
     [HttpGet]

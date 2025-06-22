@@ -8,7 +8,6 @@ public class DataSeeder(AppDbContext context)
 {
     public async Task SeedAsync()
     {
-        // Seed a test user if none exist
         if (!await context.Users.AnyAsync())
         {
             context.Users.Add(new User
@@ -19,7 +18,6 @@ public class DataSeeder(AppDbContext context)
             });
         }
 
-        // Seed default locations if none exist
         if (!await context.Locations.AnyAsync())
         {
             context.Locations.AddRange(

@@ -5,5 +5,5 @@ public record ItemDto(
     string Name,
     string SKU,
     int Quantity,
-    int LocationId
+    LocationDto Location
 );

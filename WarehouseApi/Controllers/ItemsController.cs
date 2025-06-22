@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using System.Data;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using WarehouseApi.Interfaces;
 using WarehouseShared;
@@ -12,13 +13,10 @@ public class ItemsController(IItemService svc) : ControllerBase
 {
     [HttpGet]
     public Task<List<ItemDto>> GetAll(
-        [FromQuery] string? searchName,
-        [FromQuery] string? searchSku,
+        [FromQuery] string? search,
         [FromQuery] int pageNumber = 1,
         [FromQuery] int pageSize = 10)
-    {
-        return svc.GetAllAsync(searchName, searchSku, pageNumber, pageSize);
-    }
+        => svc.GetAllAsync(search, pageNumber, pageSize);
 
     [HttpGet("{id:int}")]
     public async Task<ActionResult<ItemDto>> Get(int id)
@@ -30,16 +28,30 @@ public class ItemsController(IItemService svc) : ControllerBase
     [HttpPost]
     public async Task<ActionResult<ItemDto>> Create([FromBody] CreateItemDto dto)
     {
-        var created = await svc.CreateAsync(dto);
-        return CreatedAtAction(nameof(Get), new { id = created.Id }, created);
+        try
+        {
+            var created = await svc.CreateAsync(dto);
+            return CreatedAtAction(nameof(Get), new { id = created.Id }, created);
+        }
+        catch (DuplicateNameException ex)
+        {
+            return Conflict(new { error = ex.Message });
+        }
     }
 
     [HttpPut("{id:int}")]
     public async Task<IActionResult> Update(int id, [FromBody] CreateItemDto dto)
     {
-        return await svc.UpdateAsync(id, dto)
-            ? NoContent()
-            : NotFound();
+        try
+        {
+            return await svc.UpdateAsync(id, dto)
+                ? NoContent()
+                : NotFound();
+        }
+        catch (DuplicateNameException ex)
+        {
+            return Conflict(new { error = ex.Message });
+        }
     }
 
     [HttpDelete("{id:int}")]
